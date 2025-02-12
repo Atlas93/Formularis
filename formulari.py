@@ -1,5 +1,7 @@
 import tkinter as tk
-
+import json
+import os
+import classes as cl
 finestra = tk.Tk()
 
 finestra.title("Formulari")
@@ -15,6 +17,19 @@ def Submit():
         requerit.grid_remove()
         missatgePantalla.set(f"Benvingut, {nom.get()} {cognom.get()}")
 
+        #Ara creem el objete que volem guardar
+        alumne = cl.Alumne(nom.get(), cognom.get(),"4t ESO")      # Escriure les dades en un fitxer JSON
+        with open("dades.json", "w") as fitxer:
+            json.dump(alumne.convertir_a_json(), fitxer)
+
+# Comprovar si el fitxer existeix i carregar les dades
+if os.path.exists("dades.json"):
+    with open("dades.json", "r") as fitxer:
+        info = json.load(fitxer)
+        alumne = cl.Alumne.convertir_de_json(info)
+else:
+    alumne = cl.Alumne("Nom", "Cognom", "Curs")
+    
 marcPantalla = tk.Frame(finestra, bd=2, relief="solid",bg="#7dbbfc")
 marcPantalla.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 missatgePantalla = tk.StringVar()
